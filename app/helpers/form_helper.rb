@@ -62,10 +62,15 @@ module FormHelper
         klass = Organization
       when :locations
         klass = Location
+      when :output_template_ids
+        klass = OutputTemplate
       else
         klass = nil
     end
     authorized = AssociationAuthorizer.authorized_associations(associations.reorder(nil), klass).all
+    if attr == :output_template_ids
+        authorized = authorized.select{ |t| !t.snippet }
+    end
 
     # select2.js breaks the multiselects disabled items location
     # http://projects.theforeman.org/issues/12028
